@@ -11,16 +11,15 @@ const deleteUsers = (id) => {
 }
 
 const adduser = () => {
-    var name = $("#username").val();
-    var email = $("#useremail").val();
-    var pwd = $("#userpwd").val();
     $.ajax({
         url: "http://localhost:3000/users/postdata",
         type: "POST",
-        data: { name, email, pwd },
+        data: new FormData($('#userActionForm')[0]),
+        contentType:false,
+        processData:false,
+        cache:false,
         success: function (res) {
-          
-            $("#succmes").show();
+             $("#succmes").show();
             $('#succmes').html('User Added')
 
         }
@@ -29,11 +28,11 @@ const adduser = () => {
 
 }
 
-const updateUser=(id)=>{
+const updateUser = (id) => {
     var name = $("#username").val();
     var email = $("#useremail").val();
     $.ajax({
-        url: "http://localhost:3000/users/updatedata/"+id,
+        url: "http://localhost:3000/users/updatedata/" + id,
         type: "PUT",
         data: { name, email },
         success: function (res) {
