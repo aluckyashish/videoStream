@@ -1,0 +1,39 @@
+<%- include('header.ejs') %>
+    <div class="container">
+        <div class="row">
+            <div class="anchorDiv">
+            <a href="useraction/new" class="btn btn-primary" target="_blank">Add User</a>
+        </div>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                    <% for(var i=0;i<data.length;i++) { %>
+                        <tr>
+                            <td>
+                                <%= data[i].username %>
+                            </td>
+                            <td>
+                                <%= data[i].useremail %>
+                            </td>
+                            <td>
+                                <%= data[i].userpwd %>
+                            </td>
+                            <td><button class="btn btn-primary" onclick="gotToEdit('<%= data[i].id %>')">Edit</button>
+
+                                <button class="btn btn-danger" onclick="deleteUsers('<%= data[i].id %>')">Delete</button>
+                            </td>
+
+                        </tr>
+
+                        <% } %>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <%- include('footer.ejs') %>

@@ -1,0 +1,55 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.fltleft {
+  float: left;
+}
+
+.note {
+  text-align: center;
+  height: 80px;
+  background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+  color: #fff;
+  font-weight: bold;
+  line-height: 80px;
+}
+
+.form-content {
+  padding: 5%;
+  border: 1px solid #ced4da;
+  margin-bottom: 2%;
+}
+
+.form-control {
+  border-radius: 1.5rem;
+}
+
+.btnSubmit {
+  border: none;
+  border-radius: 1.5rem;
+  padding: 1%;
+  width: 20%;
+  cursor: pointer;
+  background: #0062cc;
+  color: #fff;
+}
+
+.ml40 {
+  margin-left: 40%;
+}
+.hide{
+  display: none
+}
+.anchorDiv{
+  width:100%;
+  margin-bottom: 1%;
+}
+.anchorDiv a{
+  float:right;
+}

@@ -1,0 +1,38 @@
+<%- include('header.ejs') %>
+
+<div class="container register-form">
+    <div class="form">
+        <div class="note">
+            <p>User Action Page</p>
+        </div>
+        <div class="alert alert-success hide" role="alert" id="succmes">
+        
+          </div>
+<form method="post" action="">
+        <div class="form-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Name *" id="username" name="username" value="<%=data.username %>"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="user Email *" id="useremail" value="<%=data.useremail %>"/>
+                    </div>
+                </div>
+                <% if(pageType=='new') { %>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="User password *" id="userpwd" value="<%=data.userpwd %>"/>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+            <% if(pageType=='new') { %>
+            <input  type="button" class="btnSubmit ml40" onclick="adduser()" value="Submit">
+            <% } else { %>
+                <input  type="button" class="btnSubmit ml40" onclick="updateUser('<%=data.id %>')" value="Submit">
+            <% } %>
+        </form>
+        </div>
+    </div>
+</div>
