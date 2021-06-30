@@ -3,8 +3,29 @@ var router = express.Router();
 var mysqlConnection = require('../config/mysql');
 var validator = require('validator');
 var multer = require('multer')
-var handleForm = multer();
+var createError = require('http-errors');
 
+// Settings for multer
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname)
+  }
+})
+
+// Middle ware for Multer
+var handleForm = multer({
+  storage: storage, limits: 2000000, fileFilter: function (res, file, cb) {
+    if (!file.mimetype.includes('image')) {
+      return cb(null, false, new Error());
+    }
+    else {
+      cb(null, true);
+    }
+  }
+});
 var md5 = require('md5');
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -34,15 +55,18 @@ router.get('/useraction/:type', function (req, res, next) {
 
 // Insert Records
 router.post('/postdata', handleForm.single('userfile'), function (req, res, next) {
-  console.log("as", req.file)
-  let checkEmail = validator.isEmail(req.body.useremail);
-  let checkname = validator.isEmpty(req.body.username);
-  if (!checkEmail || checkname) { res.send({ "status": "fail" }); return }
-  var insertData = { "username": req.body.username, "useremail": req.body.useremail, "userpwd": md5(req.body.userpwd) ,userimg:req.file.buffer.toString('base64')};
-  mysqlConnection.query('insert into users SET ?', insertData, (err, data) => {
-    if (err) { throw (err) }
-    res.send("done")
-  })
+  if (req.file) {
+    let checkEmail = validator.isEmail(req.body.useremail);
+    let checkname = validator.isEmpty(req.body.username);
+    if (!checkEmail || checkname) { res.send({ "status": "fail" }); return }
+    var insertData = { "username": req.body.username, "useremail": req.body.useremail, "userpwd": md5(req.body.userpwd), userimg: req.file.filename };
+    mysqlConnection.query('insert into users SET ?', insertData, (err, data) => {
+      if (err) { throw (err) }
+      res.send("done")
+    })
+  } else {
+    next(createError(410, 'File Not Supported'));
+  }
 });
 
 // Delete Records

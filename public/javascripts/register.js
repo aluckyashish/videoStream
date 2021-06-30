@@ -15,11 +15,12 @@ const adduser = () => {
         url: "http://localhost:3000/users/postdata",
         type: "POST",
         data: new FormData($('#userActionForm')[0]),
-        contentType:false,
-        processData:false,
-        cache:false,
+        contentType: false,
+        processData: false,
+        cache: false,
         success: function (res) {
-             $("#succmes").show();
+            $('#userActionForm').trigger('reset');
+            $("#succmes").show();
             $('#succmes').html('User Added')
 
         }
