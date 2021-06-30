@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var mysqlConnection = require('../config/mysql');
 var validator = require('validator');
-var multer  = require('multer')
-var handleForm=multer();
+var multer = require('multer')
+var handleForm = multer();
 
 var md5 = require('md5');
 /* GET users listing. */
@@ -32,21 +32,17 @@ router.get('/useraction/:type', function (req, res, next) {
   }
 });
 
-
 // Insert Records
-router.post('/postdata',handleForm.single('userfile'),function (req, res, next) {
-  console.log("as",req.file)
+router.post('/postdata', handleForm.single('userfile'), function (req, res, next) {
+  console.log("as", req.file)
   let checkEmail = validator.isEmail(req.body.useremail);
   let checkname = validator.isEmpty(req.body.username);
   if (!checkEmail || checkname) { res.send({ "status": "fail" }); return }
-  var insertData = { "username": req.body.username, "useremail": req.body.useremail, "userpwd": md5(req.body.userpwd) };
-
-  console.log("insertData",insertData)
+  var insertData = { "username": req.body.username, "useremail": req.body.useremail, "userpwd": md5(req.body.userpwd) ,userimg:req.file.buffer.toString('base64')};
   mysqlConnection.query('insert into users SET ?', insertData, (err, data) => {
     if (err) { throw (err) }
     res.send("done")
   })
-
 });
 
 // Delete Records
