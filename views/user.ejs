@@ -15,13 +15,13 @@
                     <% for(var i=0;i<data.length;i++) { %>
                         <tr>
                             <td>
-                                <%= data[i].username %>
+                                <%= data[i].name %>
                             </td>
                             <td>
-                                <%= data[i].useremail %>
+                                <%= data[i].email %>
                             </td>
                             <td>
-                              <img height="200" width="200" src="data:image/png;base64,<%= data[i].userimg %>"
+                            
                             </td>
                             <td><button class="btn btn-primary" onclick="gotToEdit('<%= data[i].id %>')">Edit</button>
 

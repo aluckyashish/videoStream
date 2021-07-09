@@ -19,8 +19,7 @@ router.get('/getfile', function (req, res, next) {
 
 // Write File
 router.get('/writefile', function (req, res, next) {
-
-  var data = fs.writeFile('public/test.txt', 'Hello This is HCL', (err, data) => {
+var data = fs.writeFile('public/test.txt', 'Hello This is HCL', (err, data) => {
     console.log("Writing Done")
   });
 });
@@ -29,8 +28,7 @@ router.get('/writefile', function (req, res, next) {
 // Append Data
 // Write File
 router.get('/appendfile', function (req, res, next) {
-
-  var data = fs.appendFile('public/test.txt', '<br/>Today is friday', (err, data) => {
+var data = fs.appendFile('public/test.txt', '<br/>Today is friday', (err, data) => {
     console.log("Append  Done")
   });
 });
@@ -50,8 +48,7 @@ router.get('/showVideo', function (req, res, next) {
 
 // Play Video
 router.get('/playvideo', function (req, res, next) {
-
-  const filepath = path.resolve('public/video/video.mp4');
+const filepath = path.resolve('public/video/video.mp4');
   const stat = fs.statSync(filepath);
   const filesize = stat.size;
   const range = req.headers.range;
@@ -82,7 +79,28 @@ else{
 
 });
 
+// basic of write stream
+router.get('/write', function (req, res, next) {
+ let writer= fs.createWriteStream("test.txt");
+//   let reader=fs.createReadStream('public/video/video.mp4')
+//  reader.pipe(writer)
+ 
 
+});
+
+
+//bascic of events 
+router.get('/nwrite', function (req, res, next) {
+ let writer= fs.createWriteStream("test.txt");
+ writer.on('open',()=>{
+
+  console.log('fie is open')
+ })
+//   let reader=fs.createReadStream('public/video/video.mp4')
+//  reader.pipe(writer)
+ 
+
+});
 
 router.post('/submitForm', function (req, res, next) {
   console.log(req.body.name)

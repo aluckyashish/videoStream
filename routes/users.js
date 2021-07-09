@@ -4,6 +4,7 @@ var mysqlConnection = require('../config/mysql');
 var validator = require('validator');
 var multer = require('multer')
 var createError = require('http-errors');
+var usersModel = require('../models/users');
 
 // Settings for multer
 var storage = multer.diskStorage({
@@ -34,10 +35,16 @@ router.get('/', function (req, res, next) {
 
 // Get All Records
 router.get('/getdata', function (req, res, next) {
-  mysqlConnection.query('select * from users order by id desc', (err, data) => {
-    if (err) { throw (err) }
-    res.render('user', { data });
-  })
+  // mysqlConnection.query('select * from users order by id desc', (err, data) => {
+  //   if (err) { throw (err) }
+  //   res.render('user', { data });
+  // })
+
+  usersModel.find({}, (err, data) => {
+    if (err) throw err;
+    res.render('user', { data })
+
+})
 });
 
 
@@ -60,10 +67,24 @@ router.post('/postdata', handleForm.single('userfile'), function (req, res, next
     let checkname = validator.isEmpty(req.body.username);
     if (!checkEmail || checkname) { res.send({ "status": "fail" }); return }
     var insertData = { "username": req.body.username, "useremail": req.body.useremail, "userpwd": md5(req.body.userpwd), userimg: req.file.filename };
-    mysqlConnection.query('insert into users SET ?', insertData, (err, data) => {
-      if (err) { throw (err) }
-      res.send("done")
-    })
+
+    const user = new usersModel({
+      "name": req.body.username,
+      "email": req.body.useremail,
+      "password": md5(req.body.userpwd),
+      "exp": [{ "name": "test" }, { "name": "test2" }],
+      "userimg":req.file.filename
+  });
+  user.save((err,res1) => {
+if(err) throw err;
+    res.send("done")
+  })
+    // mysqlConnection.query('insert into users SET ?', insertData, (err, data) => {
+    //   if (err) { throw (err) }
+    //   res.send("done")
+    // })
+
+
   } else {
     next(createError(410, 'File Not Supported'));
   }

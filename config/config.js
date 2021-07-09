@@ -5,5 +5,10 @@ var mysqlConfig = {
     'database': 'hcldemo'
 }
 
-var config={mysql:mysqlConfig};
+var mongoConfig={
+    useNewUrlParser:true,
+    useUnifiedTopology:true,
+}
+
+var config={mysql:mysqlConfig,mongo:mongoConfig};
 module.exports=config;
