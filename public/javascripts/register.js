@@ -12,10 +12,13 @@ const deleteUsers = (id) => {
 
 const adduser = () => {
     $.ajax({
-        url: "http://localhost:3000/users/postdata",
+        url: "http://localhost:3000/mongo/newuser",
         type: "POST",
         data: new FormData($('#userActionForm')[0]),
         contentType: false,
+        headers:{
+            'token':'Bearer ashishioshohsohso'
+        },
         processData: false,
         cache: false,
         success: function (res) {
@@ -44,6 +47,27 @@ const updateUser = (id) => {
 
         }
     })
+}
+
+
+
+const loginuser = () => {
+    $.ajax({
+        url: "http://localhost:3000/mongo/loginUser",
+        type: "POST",
+        data: new FormData($('#userActionForm')[0]),
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function (res) {
+            $('#userActionForm').trigger('reset');
+            $("#succmes").show();
+            $('#succmes').html('User Added')
+
+        }
+    })
+
+
 }
 const gotToEdit = (id) => {
     window.location.href = "/users/useraction/" + id

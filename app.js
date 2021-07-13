@@ -9,7 +9,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
+var session = require('express-session')
 var mongoRouter = require('./routes/mongouser');
 var mongoCon=require('./config/mongo');
 var app = express();
@@ -26,7 +26,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(session({
+  secret: 'hcldemo'
+}))
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/mongo',mongoRouter);

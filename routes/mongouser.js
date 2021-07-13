@@ -5,14 +5,18 @@ var mysqlConnection = require('../config/mysql');
 var usersModel = require('../models/users');
 var createError = require('http-errors');
 const bcrypt = require('bcrypt');
+const auth = require('../auth');
 const saltRounds = 10;
+var multer = require('multer');
 
-router.get('/newuser', async (req, res) => {
-    let password = 'ashish123';
+
+router.post('/newuser', multer().none(), async (req, res) => {
+
+    let password = req.body.userpwd
     let haspwd = await bcrypt.hash(password, saltRounds);
     const user = new usersModel({
-        "name": "ashish",
-        "email": "ashish@gail.com",
+        "name": req.body.username,
+        "email": req.body.useremail,
         "password": haspwd,
         "exp": [{ "name": "test" }, { "name": "test2" }]
     });
@@ -83,19 +87,21 @@ router.get('/deleteuser', () => {
 })
 
 
-router.post('/login', async (req, res) => {
+router.post('/loginUser', multer().none(), async (req, res) => {
 
-    let user = await usersModel.findOne({ "name": req.body.user });
+    let user = await usersModel.findOne({ "name": req.body.username });
 
     if (!user) {
         res.send("User not exist");
         return
     }
-
-    let resultCompare = await bcrypt.compare(req.body.password, user.password);
+    let resultCompare = await bcrypt.compare(req.body.userpwd, user.password);
     if (resultCompare) {
-        var token=await jwt.sign({_id:user._id.toString()},process.env.SECRET_TOKEN)
-        res.send({user,token})
+        var token = await jwt.sign({ _id: user._id.toString() }, process.env.SECRET_TOKEN);
+        res.cookie('token', token);
+
+      //  req.session.userData=user
+        res.send({ user, token })
     }
     else {
         res.status(300).send("Password not matched")
@@ -113,9 +119,30 @@ router.post('/login', async (req, res) => {
 
 })
 
+// logout 
 
-router.get('/profile',()=>{
+router.get('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.redirect('/mongo/login')
 
-    res.send("profile page")
+
 })
+
+router.get('/login', (req, res) => {
+    res.render('login')
+})
+
+
+router.get('/profile', auth, (req, res) => {
+console.log(req.usrData);
+let id=req.usrData;
+
+usersModel.find({_id:id},(req1,res1)=>{
+    res.send({"res":res1})
+})
+ //   let usr=req.session.userData
+   
+})
+
+
 module.exports = router;
