@@ -10,42 +10,6 @@ router.get('/', function (req, res, next) {
 
 });
 
-// Read File
-router.get('/getfile', function (req, res, next) {
-  var data = fs.readFileSync('public/demo.txt');
-  res.render('getdata', { data })
-});
-
-
-// Write File
-router.get('/writefile', function (req, res, next) {
-var data = fs.writeFile('public/test.txt', 'Hello This is HCL', (err, data) => {
-    console.log("Writing Done")
-  });
-});
-
-
-// Append Data
-// Write File
-router.get('/appendfile', function (req, res, next) {
-var data = fs.appendFile('public/test.txt', '<br/>Today is friday', (err, data) => {
-    console.log("Append  Done")
-  });
-});
-
-// Unlink or delete File
-router.get('/delfile', function (req, res, next) {
-  fs.unlink('public/test.txt', (err, data) => {
-    console.log("Delete  Done")
-  });
-});
-
-// Show Video
-router.get('/showVideo', function (req, res, next) {
-  res.render('video');
-});
-
-
 // Play Video
 router.get('/playvideo', function (req, res, next) {
 const filepath = path.resolve('public/video/video.mp4');
