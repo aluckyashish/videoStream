@@ -3,6 +3,17 @@ var createError = require('http-errors');
 var router = express.Router();
 var fs = require('fs');
 var path = require('path');
+
+var S3 = require('aws-sdk/clients/s3');
+var AWS = require('aws-sdk/global');
+AWS.config.update(
+  {
+    "accessKeyId": "AKIASDXXGMKKRMWCQGOJ",
+    "secretAccessKey": "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",
+    "region": "ap-southeast-1"
+  }
+);
+const s3 = new AWS.S3();
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
@@ -12,34 +23,21 @@ router.get('/', function (req, res, next) {
 
 // Play Video
 router.get('/playvideo', function (req, res, next) {
-const filepath = path.resolve('public/video/video.mp4');
-  const stat = fs.statSync(filepath);
-  const filesize = stat.size;
-  const range = req.headers.range;
-  if (range) {
-    const fparts = range.replace(/bytes=/, "");
-    parts = fparts.split("-");
-    const start = parseInt(parts[0],10);
-    const end = parts[1] ? parseInt(parts[1],10) : filesize-1;
-    const chunksize = (end - start) + 1;
-    const file=fs.createReadStream(filepath,{start,end})
-    const head={
-      'Content-Range':`bytes ${start}-${end}/${filesize}`,
-      'Accept-Ranges':'bytes',
-      'Content-Length':chunksize,
-      'Content-Type':'video/mp4'
+
+  AWS.config.getCredentials(function (err) {
+    if (err) console.log(err.stack);
+    // credentials not loaded
+    else {
+      console.log("Access key:", AWS.config.credentials.accessKeyId);
+  
+      var params = { Bucket: 'genentech-training-video', Key: 'video.mp4' };
+      
+      var url = s3.getSignedUrl('getObject', params);
+
+      res.render('video',{url})
     }
-    res.writeHead(206,head);
-    file.pipe(res);
-}
-else{
-  const head={
-    'Content-Length':filesize,
-    'Content-Type':'video/mp4'
-  }
-  res.writeHead(200,head);
-  fs.createReadStream(filepath).pipe(res);
-}
+  });
+
 
 });
 

@@ -30,25 +30,7 @@ app.use(session({
   secret: 'hcldemo'
 }))
 
-AWS.config.update(
-  {
-    "accessKeyId": "TODO",
-    "secretAccessKey": "TODO",
-    "region": "TODO"
-  }
-);
-const s3 = new AWS.S3();
-AWS.config.getCredentials(function (err) {
-  if (err) console.log(err.stack);
-  // credentials not loaded
-  else {
-    console.log("Access key:", AWS.config.credentials.accessKeyId);
 
-    var params = { Bucket: 'bucket', Key: AWS.config.credentials.accessKeyId };
-    var url = s3.getSignedUrl('getObject', params);
-    console.log('The URL is', url);
-  }
-});
 app.use('/', indexRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
